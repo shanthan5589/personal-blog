@@ -1,16 +1,9 @@
-// Future post placeholders. Keep these here until their full articles are ready.
-// {
-//   category: "Culture",
-//   title: "What a neighbourhood bookstore remembers",
-//   excerpt: "The quiet infrastructure of a city: familiar spines, hand-written cards, and the people who return.",
-// }
-// {
-//   category: "Notes",
-//   title: "On making room for unfinished thoughts",
-//   excerpt: "Some ideas need to live in the margins before they learn how to speak.",
-// }
+import { PostArtwork } from "./components/post-artwork";
+import { posts } from "./lib/posts";
 
 export default function Home() {
+  const featuredPost = posts.find((post) => post.featured) ?? posts[0];
+
   return (
     <main>
       <section className="hero-shell">
@@ -37,15 +30,12 @@ export default function Home() {
       <section className="feature-wrap" id="journal" aria-labelledby="featured-heading">
         <div className="section-label"><span>01</span><h2 id="featured-heading">Featured post</h2></div>
         <article className="feature-card">
-          <div className="feature-art ochre" aria-hidden="true">
-            <div className="shape-block" />
-            <div className="shape-arch" />
-          </div>
+          <PostArtwork artwork={featuredPost.artwork} className="feature-art" />
           <div className="feature-copy">
-            <p className="kicker">Essay <i>&middot;</i> Jul 18, 2026 <i>&middot;</i> 5 min read</p>
-            <h2>I Want to Feel Human Again</h2>
-            <p className="feature-description">On development, AI, loneliness, and wanting to feel alive beyond the laptop screen.</p>
-            <a href="/posts/feel-human-again" className="text-link">Read the post <span>&rarr;</span></a>
+            <p className="kicker">{featuredPost.category} <i>&middot;</i> {featuredPost.date} <i>&middot;</i> {featuredPost.readMinutes} min read</p>
+            <h2>{featuredPost.title}</h2>
+            <p className="feature-description">{featuredPost.excerpt}</p>
+            <a href={`/posts/${featuredPost.slug}`} className="text-link">Read the post <span>&rarr;</span></a>
           </div>
         </article>
       </section>
@@ -53,13 +43,15 @@ export default function Home() {
       <section className="journal" id="recent" aria-labelledby="journal-heading">
         <div className="section-label"><span>02</span><h2 id="journal-heading">Recent writing</h2></div>
         <div className="story-grid">
-          <article className="story">
-            <div className="story-art ochre" aria-hidden="true"><div className="shape-block" /><div className="shape-arch" /></div>
-            <p className="kicker">Essay <i>&middot;</i> 5 min read</p>
-            <h3><a href="/posts/feel-human-again">I Want to Feel Human Again</a></h3>
-            <p className="excerpt">On development, AI, loneliness, and wanting to feel alive beyond the laptop screen.</p>
-            <p className="story-date">Jul 18, 2026</p>
-          </article>
+          {posts.map((post) => (
+            <article className="story" key={post.slug}>
+              <PostArtwork artwork={post.artwork} className="story-art" />
+              <p className="kicker">{post.category} <i>&middot;</i> {post.readMinutes} min read</p>
+              <h3><a href={`/posts/${post.slug}`}>{post.title}</a></h3>
+              <p className="excerpt">{post.excerpt}</p>
+              <p className="story-date">{post.date}</p>
+            </article>
+          ))}
         </div>
       </section>
 
